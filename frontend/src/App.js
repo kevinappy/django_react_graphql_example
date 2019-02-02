@@ -10,6 +10,7 @@ const AppQuery = graphql`
     allStudents(first: 5) {
       totalCount
       edges {
+        cursor
         node {
           id
           firstName
