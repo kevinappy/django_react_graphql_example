@@ -1,26 +1,53 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import { QueryRenderer } from "react-relay";
+import environment from "./RelayEnvironment";
+
+const graphql = require("babel-plugin-relay/macro");
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <QueryRenderer
+        environment={environment}
+        query={graphql`
+          query AppQuery {
+            students {
+              id
+              firstName
+              lastName
+              books {
+                subject {
+                  name
+                }
+              }
+            }
+          }
+        `}
+        variables={{}}
+        render={({ error, props }) => {
+          if (error) {
+            return <div>Error!</div>;
+          }
+          if (!props) {
+            return <div>Loading...</div>;
+          }
+          console.log(props);
+          let elements = [];
+          props.students.forEach(student => {
+            let books = [];
+            student.books.forEach(book => {
+              books.push(<span>{book.subject.name} </span>);
+            });
+            elements.push(
+              <div key={student.id}>
+                Name: {student.firstName} {student.lastName} Books: {books}
+              </div>
+            );
+          });
+          return elements;
+        }}
+      />
     );
   }
 }
