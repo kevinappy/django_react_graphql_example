@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 26d157b780dfc9952bac3819a8a3f77e
+ * @relayHash 71b3c5195326787262785c6d5f133af9
  */
 
 /* eslint-disable */
@@ -11,16 +11,43 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type AppQueryVariables = {||};
 export type AppQueryResponse = {|
-  +students: ?$ReadOnlyArray<?{|
-    +id: string,
-    +firstName: string,
-    +lastName: string,
-    +books: ?$ReadOnlyArray<?{|
-      +subject: {|
-        +name: string
+  +allStudents: ?{|
+    +totalCount: ?number,
+    +edges: $ReadOnlyArray<?{|
+      +node: ?{|
+        +id: string,
+        +firstName: string,
+        +lastName: string,
+        +age: number,
+        +books: ?{|
+          +edges: $ReadOnlyArray<?{|
+            +node: ?{|
+              +id: string,
+              +subject: {|
+                +id: string,
+                +name: string,
+                +code: string,
+              |},
+            |}
+          |}>
+        |},
+        +subjects: ?{|
+          +edges: $ReadOnlyArray<?{|
+            +node: ?{|
+              +id: string,
+              +name: string,
+              +code: string,
+            |}
+          |}>
+        |},
       |}
     |}>,
-  |}>
+    +pageInfo: {|
+      +hasNextPage: boolean,
+      +startCursor: ?string,
+      +endCursor: ?string,
+    |},
+  |}
 |};
 export type AppQuery = {|
   variables: AppQueryVariables,
@@ -31,16 +58,41 @@ export type AppQuery = {|
 
 /*
 query AppQuery {
-  students {
-    id
-    firstName
-    lastName
-    books {
-      subject {
-        name
+  allStudents(first: 5) {
+    totalCount
+    edges {
+      node {
         id
+        firstName
+        lastName
+        age
+        books {
+          edges {
+            node {
+              id
+              subject {
+                id
+                name
+                code
+              }
+            }
+          }
+        }
+        subjects {
+          edges {
+            node {
+              id
+              name
+              code
+            }
+          }
+        }
       }
-      id
+    }
+    pageInfo {
+      hasNextPage
+      startCursor
+      endCursor
     }
   }
 }
@@ -54,27 +106,202 @@ var v0 = {
   "args": null,
   "storageKey": null
 },
-v1 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "firstName",
-  "args": null,
-  "storageKey": null
-},
-v2 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "lastName",
-  "args": null,
-  "storageKey": null
-},
-v3 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "name",
-  "args": null,
-  "storageKey": null
-};
+v1 = [
+  (v0/*: any*/),
+  {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "name",
+    "args": null,
+    "storageKey": null
+  },
+  {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "code",
+    "args": null,
+    "storageKey": null
+  }
+],
+v2 = [
+  {
+    "kind": "LinkedField",
+    "alias": null,
+    "name": "allStudents",
+    "storageKey": "allStudents(first:5)",
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "first",
+        "value": 5,
+        "type": "Int"
+      }
+    ],
+    "concreteType": "StudentNodeConnection",
+    "plural": false,
+    "selections": [
+      {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "totalCount",
+        "args": null,
+        "storageKey": null
+      },
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "edges",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "StudentNodeEdge",
+        "plural": true,
+        "selections": [
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "node",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "StudentNode",
+            "plural": false,
+            "selections": [
+              (v0/*: any*/),
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "firstName",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "lastName",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "age",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "books",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "BookNodeConnection",
+                "plural": false,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "edges",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "BookNodeEdge",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "node",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "BookNode",
+                        "plural": false,
+                        "selections": [
+                          (v0/*: any*/),
+                          {
+                            "kind": "LinkedField",
+                            "alias": null,
+                            "name": "subject",
+                            "storageKey": null,
+                            "args": null,
+                            "concreteType": "SubjectNode",
+                            "plural": false,
+                            "selections": (v1/*: any*/)
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "subjects",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "SubjectNodeConnection",
+                "plural": false,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "edges",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "SubjectNodeEdge",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "node",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "SubjectNode",
+                        "plural": false,
+                        "selections": (v1/*: any*/)
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "pageInfo",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "PageInfo",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "hasNextPage",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "startCursor",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "endCursor",
+            "args": null,
+            "storageKey": null
+          }
+        ]
+      }
+    ]
+  }
+];
 return {
   "kind": "Request",
   "fragment": {
@@ -83,101 +310,23 @@ return {
     "type": "Query",
     "metadata": null,
     "argumentDefinitions": [],
-    "selections": [
-      {
-        "kind": "LinkedField",
-        "alias": null,
-        "name": "students",
-        "storageKey": null,
-        "args": null,
-        "concreteType": "StudentType",
-        "plural": true,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "kind": "LinkedField",
-            "alias": null,
-            "name": "books",
-            "storageKey": null,
-            "args": null,
-            "concreteType": "BookType",
-            "plural": true,
-            "selections": [
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "subject",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "SubjectType",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "AppQuery",
     "argumentDefinitions": [],
-    "selections": [
-      {
-        "kind": "LinkedField",
-        "alias": null,
-        "name": "students",
-        "storageKey": null,
-        "args": null,
-        "concreteType": "StudentType",
-        "plural": true,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "kind": "LinkedField",
-            "alias": null,
-            "name": "books",
-            "storageKey": null,
-            "args": null,
-            "concreteType": "BookType",
-            "plural": true,
-            "selections": [
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "subject",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "SubjectType",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v0/*: any*/)
-                ]
-              },
-              (v0/*: any*/)
-            ]
-          }
-        ]
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
     "operationKind": "query",
     "name": "AppQuery",
     "id": null,
-    "text": "query AppQuery {\n  students {\n    id\n    firstName\n    lastName\n    books {\n      subject {\n        name\n        id\n      }\n      id\n    }\n  }\n}\n",
+    "text": "query AppQuery {\n  allStudents(first: 5) {\n    totalCount\n    edges {\n      node {\n        id\n        firstName\n        lastName\n        age\n        books {\n          edges {\n            node {\n              id\n              subject {\n                id\n                name\n                code\n              }\n            }\n          }\n        }\n        subjects {\n          edges {\n            node {\n              id\n              name\n              code\n            }\n          }\n        }\n      }\n    }\n    pageInfo {\n      hasNextPage\n      startCursor\n      endCursor\n    }\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '8e9aa79039c27b6c26560ae5f8dc2cb4';
+(node/*: any*/).hash = '4df95b8bf1d4825d9bddbe2bb2c4b35d';
 module.exports = node;

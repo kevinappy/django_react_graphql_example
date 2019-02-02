@@ -12,14 +12,41 @@ class App extends Component {
         environment={environment}
         query={graphql`
           query AppQuery {
-            students {
-              id
-              firstName
-              lastName
-              books {
-                subject {
-                  name
+            allStudents(first: 5) {
+              totalCount
+              edges {
+                node {
+                  id
+                  firstName
+                  lastName
+                  age
+                  books {
+                    edges {
+                      node {
+                        id
+                        subject {
+                          id
+                          name
+                          code
+                        }
+                      }
+                    }
+                  }
+                  subjects {
+                    edges {
+                      node {
+                        id
+                        name
+                        code
+                      }
+                    }
+                  }
                 }
+              }
+              pageInfo {
+                hasNextPage
+                startCursor
+                endCursor
               }
             }
           }
@@ -34,17 +61,26 @@ class App extends Component {
           }
           console.log(props);
           let elements = [];
-          props.students.forEach(student => {
+          props.allStudents.edges.forEach(student => {
             let books = [];
-            student.books.forEach(book => {
-              books.push(<span>{book.subject.name} </span>);
+            student.node.books.edges.forEach(book => {
+              books.push(
+                <span key={book.node.id}>{book.node.subject.name} </span>
+              );
             });
             elements.push(
-              <div key={student.id}>
-                Name: {student.firstName} {student.lastName} Books: {books}
+              <div key={student.node.id}>
+                Name: {student.node.firstName} {student.node.lastName} Books:{" "}
+                {books}
               </div>
             );
           });
+          elements.push(
+            <div key="Total">
+              Showing: {props.allStudents.edges.length}/
+              {props.allStudents.totalCount}
+            </div>
+          );
           return elements;
         }}
       />

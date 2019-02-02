@@ -119,7 +119,8 @@ STATIC_URL = "/static/"
 
 
 # Graphene-Django config
-GRAPHENE = {"SCHEMA": "gql.schema.schema"}  # Where your Graphene schema lives
+# Where your Graphene schema lives
+GRAPHENE = {"SCHEMA": "gql.graphene.schema.schema"}
 
 
 # Django Cors Headers
